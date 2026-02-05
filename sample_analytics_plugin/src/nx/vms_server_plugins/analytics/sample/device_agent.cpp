@@ -58,23 +58,52 @@ namespace nx {
                     std::string name;
                 };
 
-                std::vector<char> DeviceAgent::decodeBase64(const std::string& input)
+                std::vector<char> DeviceAgent::decodeBase64(const std::string& data)
                 {
-                    static const std::string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-                    std::vector<int> T(256, -1);
-                    for (int i = 0; i < 64; i++) T[base64_chars[i]] = i;
-                    int val = 0, valb = -8;
-                    std::vector<char> out;
-                    for (unsigned char c : input) {
-                        if (T[c] == -1) break;
-                        val = (val << 6) + T[c];
-                        valb += 6;
-                        if (valb >= 0) {
-                            out.push_back(char((val >> valb) & 0xFF));
-                            valb -= 8;
+                    static constexpr int8_t b64[] = { 
+                        62,-1,-1,-1,63,52,53,54,55,56,57,58,59,60,61,-1,-1,-1,-2,-1,-1,-1,0,1,2,3,4,5,6,7,8,9,
+                        10,11, 12,13,14,15,16,17,18,19,20,21,22,23,24,25,-1,-1,-1,-1,-1,-1,26,27,28,29,30,31,32,33,
+                        34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51 };
+
+                    std::vector<char> result;
+                    if (data.empty()) return result;
+
+                    result.reserve(data.size() * 0.8f);
+
+                    uint32_t buffer = 0;
+                    int state = 0;
+
+                    for (unsigned char c : data)
+                    {
+                        if (c == '=') break;
+                        int i = (int)c - 43;
+                        if (i < 0 || i >= (int)sizeof(b64) || b64[i] < 0) continue;
+
+                        buffer = (buffer << 6) | b64[i];
+                        state++;
+
+                        if (state == 4)
+                        {
+                            result.push_back((char)((buffer >> 16) & 0xFF));
+                            result.push_back((char)((buffer >> 8) & 0xFF));
+                            result.push_back((char)(buffer & 0xFF));
+                            buffer = 0;
+                            state = 0;
                         }
                     }
-                    return out;
+
+                    // Xử lý nốt phần dư (Padding logic) để ảnh không bị lỗi sọc ở đáy
+                    if (state == 2)
+                    {
+                        result.push_back((char)((buffer >> 4) & 0xFF));
+                    }
+                    else if (state == 3)
+                    {
+                        result.push_back((char)((buffer >> 10) & 0xFF));
+                        result.push_back((char)((buffer >> 2) & 0xFF));
+                    }
+
+                    return result;
                 }
 
                 bool DeviceAgent::pushCustomMetadataPacket(
