@@ -1,0 +1,10 @@
+deploy.sh
+note.txt
+
+server_plugin_sdk
+ipro_plugin_package
+build
+.vscode
+
+#Out ( build()
+sample_analytics_plugin/out
