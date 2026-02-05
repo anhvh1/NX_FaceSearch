@@ -16,52 +16,40 @@
 #include <nx/kit/debug.h>
 
 namespace nx {
-namespace vms_server_plugins {
-namespace analytics {
-namespace sample {
+    namespace vms_server_plugins {
+        namespace analytics {
+            namespace sample {
 
-using namespace nx::sdk;
-using namespace nx::sdk::analytics;
+                using namespace nx::sdk;
+                using namespace nx::sdk::analytics;
 
-Engine::Engine(Integration* integration):
-    nx::sdk::analytics::Engine(NX_DEBUG_ENABLE_OUTPUT, integration->instanceId()),
-    m_integration(integration)
-{
-}
+                Engine::Engine(Integration* integration) :
+                    nx::sdk::analytics::Engine(NX_DEBUG_ENABLE_OUTPUT, integration->instanceId()),
+                    m_integration(integration)
+                {
+                }
 
-Engine::~Engine()
-{
-}
+                Engine::~Engine()
+                {
+                }
 
-void Engine::doObtainDeviceAgent(Result<IDeviceAgent*>* outResult, const IDeviceInfo* deviceInfo)
-{
-    *outResult = new DeviceAgent(this, deviceInfo);
-}
+                void Engine::doObtainDeviceAgent(Result<IDeviceAgent*>* outResult, const IDeviceInfo* deviceInfo)
+                {
+                    *outResult = new DeviceAgent(this, deviceInfo);
+                }
 
-Result<IAction::Result> Engine::executeAction(
-    const std::string& actionId,
-    Uuid trackId,
-    Uuid deviceId,
-    int64_t timestampUs,
-    Ptr<IObjectTrackInfo> objectTrackInfo,
-    const std::map<std::string, std::string>& params)
-{
-    
-    return Result<IAction::Result>();
-}
+                static std::string buildCapabilities()
+                {
+                    if (ini().deviceDependent)
+                        return "deviceDependent";
 
-static std::string buildCapabilities()
-{
-    if (ini().deviceDependent)
-        return "deviceDependent";
-
-    return "";
-}
+                    return "";
+                }
 
 
-std::string Engine::manifestString() const
-{
-    return /*suppress newline*/ 1 + (const char*) R"json(
+                std::string Engine::manifestString() const
+                {
+                    return /*suppress newline*/ 1 + (const char*)R"json(
 {
     "id": "lightjsc.facesearch.engine",
     "streamTypeFilter": "compressedVideo|metadata",
@@ -99,10 +87,10 @@ std::string Engine::manifestString() const
     }
 }
 )json";
-}
+                }
 
 
-} // namespace sample
-} // namespace analytics
-} // namespace vms_server_plugins
+            } // namespace sample
+        } // namespace analytics
+    } // namespace vms_server_plugins
 } // namespace nx

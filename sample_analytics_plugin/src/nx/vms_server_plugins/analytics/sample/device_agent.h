@@ -23,8 +23,8 @@ public:
 protected:
     virtual std::string manifestString() const override;
 
-    // virtual bool pushCompressedVideoFrame(
-    //     nx::sdk::Ptr<const nx::sdk::analytics::ICompressedVideoPacket> videoFrame) override;
+    virtual bool pushCompressedVideoFrame(
+        nx::sdk::Ptr<const nx::sdk::analytics::ICompressedVideoPacket> videoFrame) override;
 
     virtual bool pushCustomMetadataPacket(
         nx::sdk::Ptr<const nx::sdk::analytics::ICustomMetadataPacket> customMetadataPacket

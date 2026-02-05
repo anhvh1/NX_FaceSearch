@@ -4,11 +4,11 @@
 #include "common.h"
 
 namespace nx {
-namespace vms_server_plugins {
-namespace analytics {
-namespace sample {
+    namespace vms_server_plugins {
+        namespace analytics {
+            namespace sample {
 
-static const std::string kDeviceAgentManifest = /*suppress newline*/ 1 + (const char*) R"json(
+                static const std::string kDeviceAgentManifest = /*suppress newline*/ 1 + (const char*)R"json(
 {
     "supportedTypes": [
         {
@@ -48,7 +48,7 @@ static const std::string kDeviceAgentManifest = /*suppress newline*/ 1 + (const 
 }
 )json";
 
-} // namespace sample
-} // namespace analytics
-} // namespace vms_server_plugins
+            } // namespace sample
+        } // namespace analytics
+    } // namespace vms_server_plugins
 } // namespace nx

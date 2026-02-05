@@ -13,7 +13,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-find_package(pugixml REQUIRED)
+#find_package(pugixml REQUIRED)
 
 # 3. Định nghĩa Export Macro cho Linux/Windows
 if(WIN32)
@@ -45,7 +45,7 @@ add_subdirectory("${nxSdkDir}/nx_kit" "${CMAKE_CURRENT_BINARY_DIR}/nx_kit")
 set(SDK_SRC_DIR "${nxSdkDir}/src")
 file(GLOB_RECURSE SDK_SRC CONFIGURE_DEPENDS "${SDK_SRC_DIR}/*")
 
-add_library(nx_sdk STATIC ${SDK_SRC})
+add_library(nx_sdk STATIC ${SDK_SRC} "src/nx/vms_server_plugins/analytics/sample/common.cpp" "src/nx/vms_server_plugins/analytics/sample/common.h" "src/nx/vms_server_plugins/analytics/sample/device_agent.cpp" "src/nx/vms_server_plugins/analytics/sample/device_agent.h" "src/nx/vms_server_plugins/analytics/sample/engine.cpp" "src/nx/vms_server_plugins/analytics/sample/engine.h" "src/nx/vms_server_plugins/analytics/sample/face_search_plugin_ini.cpp" "src/nx/vms_server_plugins/analytics/sample/face_search_plugin_ini.h" "src/nx/vms_server_plugins/analytics/sample/httplib.h" "src/nx/vms_server_plugins/analytics/sample/integration.cpp" "src/nx/vms_server_plugins/analytics/sample/integration.h" "src/nx/vms_server_plugins/analytics/sample/manifest_device_agent_EN.h" "src/nx/vms_server_plugins/analytics/sample/manifest_device_agent_VI.h" "src/nx/vms_server_plugins/analytics/sample/manifest_integration_EN.h" "src/nx/vms_server_plugins/analytics/sample/manifest_integration_VI.h" "src/nx/vms_server_plugins/analytics/sample/pugixml.cpp")
 target_include_directories(nx_sdk PUBLIC "${SDK_SRC_DIR}")
 target_link_libraries(nx_sdk PUBLIC nx_kit)
 target_compile_definitions(nx_sdk PUBLIC NX_PLUGIN_API=${API_EXPORT_MACRO})
@@ -57,12 +57,12 @@ set(plugin_src_dir "${CMAKE_CURRENT_LIST_DIR}/src")
 file(GLOB_RECURSE plugin_src_files CONFIGURE_DEPENDS "${plugin_src_dir}/*")
 
 # Tạo thư viện tĩnh Integration (Nơi chứa logic AI/Database sau này)
-add_library(my_plugin_integration STATIC ${plugin_src_files})
+add_library(my_plugin_integration STATIC ${plugin_src_files} "src/nx/vms_server_plugins/analytics/sample/common.cpp" "src/nx/vms_server_plugins/analytics/sample/common.h" "src/nx/vms_server_plugins/analytics/sample/device_agent.cpp" "src/nx/vms_server_plugins/analytics/sample/device_agent.h" "src/nx/vms_server_plugins/analytics/sample/engine.cpp" "src/nx/vms_server_plugins/analytics/sample/engine.h" "src/nx/vms_server_plugins/analytics/sample/face_search_plugin_ini.cpp" "src/nx/vms_server_plugins/analytics/sample/face_search_plugin_ini.h" "src/nx/vms_server_plugins/analytics/sample/httplib.h" "src/nx/vms_server_plugins/analytics/sample/integration.cpp" "src/nx/vms_server_plugins/analytics/sample/integration.h" "src/nx/vms_server_plugins/analytics/sample/manifest_device_agent_EN.h" "src/nx/vms_server_plugins/analytics/sample/manifest_device_agent_VI.h" "src/nx/vms_server_plugins/analytics/sample/manifest_integration_EN.h" "src/nx/vms_server_plugins/analytics/sample/manifest_integration_VI.h" "src/nx/vms_server_plugins/analytics/sample/pugixml.cpp")
 target_include_directories(my_plugin_integration PUBLIC "${plugin_src_dir}")
-target_link_libraries(my_plugin_integration PUBLIC nx_sdk pugixml)
+target_link_libraries(my_plugin_integration PUBLIC nx_sdk)
 
 # Tạo file .so cuối cùng (Chỉ chứa plugin.cpp và link với Integration)
-add_library(my_plugin SHARED "plugin/plugin.cpp")
+add_library(my_plugin SHARED "plugin/plugin.cpp" "src/nx/vms_server_plugins/analytics/sample/common.cpp" "src/nx/vms_server_plugins/analytics/sample/common.h" "src/nx/vms_server_plugins/analytics/sample/device_agent.cpp" "src/nx/vms_server_plugins/analytics/sample/device_agent.h" "src/nx/vms_server_plugins/analytics/sample/engine.cpp" "src/nx/vms_server_plugins/analytics/sample/engine.h" "src/nx/vms_server_plugins/analytics/sample/face_search_plugin_ini.cpp" "src/nx/vms_server_plugins/analytics/sample/face_search_plugin_ini.h" "src/nx/vms_server_plugins/analytics/sample/httplib.h" "src/nx/vms_server_plugins/analytics/sample/integration.cpp" "src/nx/vms_server_plugins/analytics/sample/integration.h" "src/nx/vms_server_plugins/analytics/sample/manifest_device_agent_EN.h" "src/nx/vms_server_plugins/analytics/sample/manifest_device_agent_VI.h" "src/nx/vms_server_plugins/analytics/sample/manifest_integration_EN.h" "src/nx/vms_server_plugins/analytics/sample/manifest_integration_VI.h" "src/nx/vms_server_plugins/analytics/sample/pugixml.cpp")
 target_link_libraries(my_plugin PRIVATE my_plugin_integration)
 
 # Đặt tên file đầu ra cho giống chuẩn (ví dụ: my_plugin.so)
