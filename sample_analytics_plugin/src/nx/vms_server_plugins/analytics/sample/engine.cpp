@@ -54,6 +54,32 @@ namespace nx {
     "id": "lightjsc.facesearch.engine",
     "streamTypeFilter": "compressedVideo|metadata",
     "capabilities": ")json" + buildCapabilities() + R"json(",
+    "deviceAgentSettingsModel": {
+        "type": "Settings",
+        "items": [
+            {
+                "type": "DoubleSpinBox",
+                "name": "scoreSetting",
+                "caption":"Tùy chỉnh độ tin cậy",
+                "description": "Độ tin cậy tối thiểu để phát hiện đối tượng (0.0 - 1.0)",
+                "defaultValue": 0.0,
+                "minValue": 0.0,
+                "maxValue": 1.0,
+                "step": 0.05,
+                "decimals": 3
+            },
+            {
+                "type": "SpinBox",
+                "name": "intervalSetting",
+                "caption":"Tùy chỉnh độ trễ",
+                "description": "Khoảng thời gian giữa những lần phát hiện ( 1 - 3600 giây )",
+                "defaultValue": 3,
+                "minValue": 0,
+                "maxValue": 3600,
+                "step": 1
+            }
+        ]
+    },
     "typeLibrary":
     {
         "objectTypes":

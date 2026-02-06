@@ -30,12 +30,18 @@ protected:
         nx::sdk::Ptr<const nx::sdk::analytics::ICustomMetadataPacket> customMetadataPacket
     ) override;
 
+    virtual nx::sdk::Result<const nx::sdk::ISettingsResponse*> settingsReceived() override;
+
 private:
 
-    int64_t m_lastVideoFrameTimestampUs = 0;
-
+    int64_t currentTimestampUs = 0;
+    int64_t m_lastProcessFinishedUs = 0;
+    bool m_hasSentSomeMetadataPacket = false;
     Engine* const m_engine;
     std::vector<char> decodeBase64(const std::string& input);
+    float scoreSetting = 0.0f;
+    static constexpr int64_t kOneSecondUs = 1'000'000LL;
+    int16_t intervalSetting = 3;
 
 };
 

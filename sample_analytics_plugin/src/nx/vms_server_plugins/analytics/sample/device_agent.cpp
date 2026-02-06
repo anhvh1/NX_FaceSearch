@@ -106,9 +106,30 @@ namespace nx {
                     return result;
                 }
 
+                nx::sdk::Result<const nx::sdk::ISettingsResponse*> DeviceAgent::settingsReceived()
+                {
+                    
+                    scoreSetting = std::stof(settingValue("scoreSetting"));
+                    intervalSetting = std::stoi(settingValue("intervalSetting"));
+                    pushIntegrationDiagnosticEvent( IIntegrationDiagnosticEvent::Level::info,
+                            "Đã lưu thiết lập cho camera",
+                            "" );
+                    return nullptr;
+                }
+
                 bool DeviceAgent::pushCustomMetadataPacket(
                     Ptr<const nx::sdk::analytics::ICustomMetadataPacket> customMetadataPacket)
                 {
+                    //timing
+                    currentTimestampUs = customMetadataPacket->timestampUs();
+                    int64_t cooldown = intervalSetting * kOneSecondUs;
+                    if (currentTimestampUs - m_lastProcessFinishedUs < cooldown) {
+                        return true; 
+                    }
+
+                    //mark sent
+                    m_hasSentSomeMetadataPacket = false;
+
                     std::setlocale(LC_NUMERIC, "C");
                     if (!ini().needMetadata)
                     {
@@ -161,20 +182,19 @@ namespace nx {
                             std::string bsScoreStr = bsScoreNode.text().as_string();
                             std::replace(bsScoreStr.begin(), bsScoreStr.end(), ',', '.');
                             float bsScore = std::stof(bsScoreStr);
-                            if (bsScore < 0.4f) {
+                            if (bsScore < scoreSetting) {
+                                // NX_PRINT << "score cua AI be hon < " << scoreSetting;
                                 continue;
                             }
+                            // NX_PRINT << "Da nhan object voi score lon hon scoreSetting: " << scoreSetting;
 
                             // ------------- object Id
-                            std::string objectIdStr = obj.attribute("ObjectId").as_string();
-                            uint8_t buffer[16];
-                            std::memset(buffer, 0, 16);
-                            size_t len = std::min((size_t)16, objectIdStr.length());
-                            std::memcpy(buffer, objectIdStr.c_str(), len);
-                            nx::sdk::Uuid trackId = nx::sdk::UuidHelper::fromRawData(buffer);
-
-                            // ------------- timing
-                            int64_t currentTimestampUs = customMetadataPacket->timestampUs();
+                            // std::string objectIdStr = obj.attribute("ObjectId").as_string();
+                            // uint8_t buffer[16];
+                            // std::memset(buffer, 0, 16);
+                            // size_t len = std::min((size_t)16, objectIdStr.length());
+                            // std::memcpy(buffer, objectIdStr.c_str(), len);
+                            nx::sdk::Uuid trackId = nx::sdk::UuidHelper::randomUuid();
 
                             // ------------- Mask
                             bool mask = humanFace.child("Mask").text().as_bool();
@@ -195,7 +215,6 @@ namespace nx {
                                 }
                             }
                             std::uint32_t a;
-                            // 3. Nếu tìm thấy khoảng tuổi có xác suất cao nhất
                             if (bestAgeRangeNode && maxAgeConfidence > 0.0f)
                             {
                                 std::string minAge = bestAgeRangeNode.attribute("min").as_string();
@@ -205,7 +224,6 @@ namespace nx {
                                     ageDisplay = minAge + " - " + maxAge;
                                 else
                                     ageDisplay = "> " + minAge;
-                                // bestShotPacket->addAttribute(makePtr<Attribute>("Độ tin cậy tuổi", std::to_string(maxAgeConfidence)));
                             }
 
                             // ------------- Gender
@@ -232,6 +250,7 @@ namespace nx {
                             bestShotPacket->addAttribute(makePtr<Attribute>("Độ tuổi", ageDisplay));
                             bestShotPacket->addAttribute(makePtr<Attribute>("Giới tính", genderValue));
                             pushMetadataPacket(bestShotPacket);
+                            m_hasSentSomeMetadataPacket = true;
                             // -------------
                         }
                     }
@@ -253,7 +272,9 @@ namespace nx {
                     //     // t = std::min(t, b);
                     //     // w = std::abs(r - l);
                     //     // h = std::abs(b - t);
-
+                    if (m_hasSentSomeMetadataPacket) {
+                        m_lastProcessFinishedUs = currentTimestampUs;
+                    }
                     return true;
                 }
 

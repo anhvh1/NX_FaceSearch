@@ -14,7 +14,7 @@ static const std::string kIntegrationManifest = /*suppress newline*/ 1 + (const 
     "id": ")json" + instanceId + R"json(",
     "name": "I-PRO Plugin Tìm Kiếm Khuôn Mặt",
     "description": "Plugin cung cấp tính năng phát hiện và tìm kiếm khuôn mặt với camera I-PRO.",
-    "version": "1.0.2",
+    "version": "1.0.4",
     "vendor": "Light JSC",
     "engineId": ")json" + instanceId + R"json(.engine"
 }
