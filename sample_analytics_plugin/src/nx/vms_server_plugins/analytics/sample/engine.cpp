@@ -72,9 +72,9 @@ namespace nx {
                 "type": "SpinBox",
                 "name": "intervalSetting",
                 "caption":"Tùy chỉnh độ trễ",
-                "description": "Khoảng thời gian giữa những lần phát hiện ( 1 - 3600 giây )",
-                "defaultValue": 3,
-                "minValue": 0,
+                "description": "Khoảng thời gian giữa những lần phát hiện ( 10 - 3600 giây )",
+                "defaultValue": 10,
+                "minValue": 10,
                 "maxValue": 3600,
                 "step": 1
             }

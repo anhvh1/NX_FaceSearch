@@ -183,10 +183,8 @@ namespace nx {
                             std::replace(bsScoreStr.begin(), bsScoreStr.end(), ',', '.');
                             float bsScore = std::stof(bsScoreStr);
                             if (bsScore < scoreSetting) {
-                                // NX_PRINT << "score cua AI be hon < " << scoreSetting;
                                 continue;
                             }
-                            // NX_PRINT << "Da nhan object voi score lon hon scoreSetting: " << scoreSetting;
 
                             // ------------- object Id
                             // std::string objectIdStr = obj.attribute("ObjectId").as_string();
@@ -250,28 +248,29 @@ namespace nx {
                             bestShotPacket->addAttribute(makePtr<Attribute>("Độ tuổi", ageDisplay));
                             bestShotPacket->addAttribute(makePtr<Attribute>("Giới tính", genderValue));
                             pushMetadataPacket(bestShotPacket);
+
                             m_hasSentSomeMetadataPacket = true;
-                            // -------------
                         }
                     }
 
-                    //     // // Bounding box        
-                    //     // float l = 0, t = 0, r = 0, b = 0, w = 0, h = 0;
-                    //     // pugi::xml_node bboxNode = obj.select_node(".//tt:BoundingBox", &vars).node();
-                    //     // l = bboxNode.attribute("left").as_float();
-                    //     // t = bboxNode.attribute("top").as_float();
-                    //     // r = bboxNode.attribute("right").as_float();
-                    //     // b = bboxNode.attribute("bottom").as_float();
-                    //     // NX_PRINT << "l" << l << "t" << t << "r" << r << "b" << b;
-                    //     // auto norm = [](float v) { return (v + 1.0f) / 2.0f; };
-                    //     // l   = norm(l);
-                    //     // r  = norm(r);        
-                    //     // t    = 1.0f - norm(t);
-                    //     // b = 1.0f - norm(b);
-                    //     // l = std::min(l, r);
-                    //     // t = std::min(t, b);
-                    //     // w = std::abs(r - l);
-                    //     // h = std::abs(b - t);
+                        // // Bounding box        
+                        // float l = 0, t = 0, r = 0, b = 0, w = 0, h = 0;
+                        // pugi::xml_node bboxNode = obj.select_node(".//tt:BoundingBox", &vars).node();
+                        // l = bboxNode.attribute("left").as_float();
+                        // t = bboxNode.attribute("top").as_float();
+                        // r = bboxNode.attribute("right").as_float();
+                        // b = bboxNode.attribute("bottom").as_float();
+                        // NX_PRINT << "l" << l << "t" << t << "r" << r << "b" << b;
+                        // auto norm = [](float v) { return (v + 1.0f) / 2.0f; };
+                        // l   = norm(l);
+                        // r  = norm(r);        
+                        // t    = 1.0f - norm(t);
+                        // b = 1.0f - norm(b);
+                        // l = std::min(l, r);
+                        // t = std::min(t, b);
+                        // w = std::abs(r - l);
+                        // h = std::abs(b - t);
+
                     if (m_hasSentSomeMetadataPacket) {
                         m_lastProcessFinishedUs = currentTimestampUs;
                     }

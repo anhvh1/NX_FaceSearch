@@ -41,7 +41,7 @@ private:
     std::vector<char> decodeBase64(const std::string& input);
     float scoreSetting = 0.0f;
     static constexpr int64_t kOneSecondUs = 1'000'000LL;
-    int16_t intervalSetting = 3;
+    int16_t intervalSetting = 10;
 
 };
 
